@@ -3,22 +3,29 @@ import "../App.css";
 
 const Post = ({ data, setPageNo }) => {
   useEffect(() => {
-    const observer = new IntersectionObserver((param) => {
-      console.log(param);
-      if (param[0].isIntersecting) {
-        observer.unobserve(lastImage);
-        setPageNo((pageNo) => pageNo + 1);
-      }
-    });
+    const observer = new IntersectionObserver(
+      (param) => {
+        if (param[0].isIntersecting) {
+          observer.unobserve(lastImage);
+          setPageNo((pageNo) => pageNo + 1);
+        }
+      },
+      { threshold: 1 }
+    );
 
     const lastImage = document.querySelector(".image-post:last-child");
-
-    console.log(lastImage, "Last Image-----");
 
     if (!lastImage) {
       return;
     }
     observer.observe(lastImage);
+
+    return () => {
+      if (lastImage) {
+        observer.unobserve(lastImage);
+      }
+      observer.disconnect();
+    };
   }, [data]);
 
   return (
@@ -38,5 +45,3 @@ const Post = ({ data, setPageNo }) => {
 };
 
 export default Post;
-
-id_ed25519;
